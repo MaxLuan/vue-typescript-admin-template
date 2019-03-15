@@ -2,6 +2,12 @@
   <div class="navbar">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <breadcrumb />
+    
+    <div class="bell-container">
+      <el-badge is-dot class="bell">
+        <el-button circle  size="mini" icon="el-icon-bell" @click="toggleOtherSide"/>
+      </el-badge>
+    </div>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -16,7 +22,7 @@
         <el-dropdown-item divided>
           <span style="display:block;" @click="logout">LogOut</span>
         </el-dropdown-item>
-      </el-dropdown-menu>
+    </el-dropdown-menu>
     </el-dropdown>
   </div>
 </template>
@@ -47,6 +53,11 @@ export default class Navbar extends Vue {
     AppModule.ToggleSideBar(false);
   }
 
+  private toggleOtherSide(){
+    console.log("test")
+    AppModule.ToggleOtherSide(false);
+  }
+
   private logout() {
     UserModule.LogOut().then(() => {
       location.reload();  // 为了重新实例化vue-router对象 避免bug
@@ -56,9 +67,12 @@ export default class Navbar extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "src/styles/variables.scss";
+// @import "element-ui/lib/theme-chalk/src/badge.css";
+
 .navbar {
-  height: 50px;
-  line-height: 50px;
+  height: $navHeight;
+  line-height: $navHeight;
   box-shadow: 0 1px 3px 0 rgba(0,0,0,.12), 0 0 3px 0 rgba(0,0,0,.04);
 
   .hamburger-container {
@@ -73,6 +87,19 @@ export default class Navbar extends Vue {
     right: 90px;
     top: 16px;
     color: red;
+  }
+
+  .bell-container {
+    position: absolute;
+    right: 90px;
+    height: 50px;
+    margin: 0;
+    top: 0;
+
+    .bell {
+      position: relative;
+      line-height: initial;
+    }
   }
 
   .avatar-container {

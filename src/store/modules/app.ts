@@ -13,6 +13,10 @@ export interface IAppState {
     opened: boolean;
     withoutAnimation: boolean;
   };
+  otherside: {
+    opened: boolean;
+    withoutAnimation: boolean;
+  }
 }
 
 @Module({ dynamic: true, store, name: 'app' })
@@ -21,6 +25,12 @@ class App extends VuexModule implements IAppState {
     opened: Cookies.get('sidebarStatus') !== 'closed',
     withoutAnimation: false,
   };
+
+  public otherside = {
+    opened: Cookies.get('othersideStatus') !== 'closed',
+    withoutAnimation: false
+  }
+
   public device = DeviceType.Desktop;
 
   @Action({ commit: 'TOGGLE_SIDEBAR' })
@@ -30,6 +40,16 @@ class App extends VuexModule implements IAppState {
 
   @Action({ commit: 'CLOSE_SIDEBAR' })
   public CloseSideBar(withoutAnimation: boolean) {
+    return withoutAnimation;
+  }
+
+  @Action({ commit: 'TOGGLE_OTHERSIDE' })
+  public ToggleOtherSide(withoutAnimation: boolean) {
+    return withoutAnimation;
+  }
+
+  @Action({ commit: 'CLOSE_OTHERSIDE' })
+  public CloseOtherSide(withoutAnimation: boolean) {
     return withoutAnimation;
   }
 
@@ -54,6 +74,24 @@ class App extends VuexModule implements IAppState {
     Cookies.set('sidebarStatus', 'closed');
     this.sidebar.opened = false;
     this.sidebar.withoutAnimation = withoutAnimation;
+  }
+
+  @Mutation
+  private TOGGLE_OTHERSIDE(withoutAnimation: boolean) {
+    if (this.otherside.opened) {
+      Cookies.set('othersideStatus', 'closed');
+    } else {
+      Cookies.set('othersideStatus', 'opened');
+    }
+    this.otherside.opened = !this.otherside.opened;
+    this.otherside.withoutAnimation = withoutAnimation;
+  }
+
+  @Mutation
+  private CLOSE_OTHERSIDE(withoutAnimation: boolean) {
+    Cookies.set('othersideStatus', 'closed');
+    this.otherside.opened = false;
+    this.otherside.withoutAnimation = withoutAnimation;
   }
 
   @Mutation

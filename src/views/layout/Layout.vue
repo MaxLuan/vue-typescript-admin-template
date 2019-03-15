@@ -4,13 +4,18 @@
     <sidebar class="sidebar-container" :collapse="classObj.hideSidebar"/>
     <div class="main-container">
       <navbar/>
-      <app-main/>
+      <div :class="otherSideObj">
+        <div class="app-main-wrapper" >
+          <app-main/>
+        </div>
+        <OtherSide class="sidebar-right" :collapse="classObj.hideOtherSide"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Navbar, AppMain, Sidebar } from './components';
+import { Navbar, AppMain, Sidebar, OtherSide } from './components';
 import ResizeMixin from './mixin/ResizeHandler';
 import { Component, Vue } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
@@ -21,6 +26,7 @@ import { DeviceType, AppModule } from '@/store/modules/app';
     Navbar,
     Sidebar,
     AppMain,
+    OtherSide
   },
 })
 export default class Layout extends mixins(ResizeMixin) {
@@ -31,6 +37,13 @@ export default class Layout extends mixins(ResizeMixin) {
       withoutAnimation: this.sidebar.withoutAnimation,
       mobile: this.device === DeviceType.Mobile,
     };
+  }
+
+  get otherSideObj(){
+    return {
+      hideOtherSide: !this.otherside.opened,
+      openOtherSide: this.otherside.opened,
+    }
   }
 
   private handleClickOutside() {
@@ -46,7 +59,7 @@ export default class Layout extends mixins(ResizeMixin) {
   .app-wrapper {
     @include clearfix;
     position: relative;
-    height: 100%;
+    height: 100vh;
     width: 100%;
   }
 
@@ -61,16 +74,26 @@ export default class Layout extends mixins(ResizeMixin) {
   }
 
   .main-container {
+    height: 100vh;
     min-height: 100%;
     transition: margin-left .28s;
     margin-left: $sideBarWidth;
     position: relative;
   }
 
+  .app-main-wrapper {
+    height: 100vh;
+    margin-top: 1px;
+    background-color: rgba(255, 255, 255, 1);
+    transition: margin-right .28s;
+    margin-right: $sideBarWidth;
+    position: relative;
+  }
+
   .sidebar-container {
     transition: width 0.28s;
     width: $sideBarWidth !important;
-    height: 100%;
+    height: 100vh;
     position: fixed;
     font-size: 0px;
     top: 0;
@@ -78,6 +101,29 @@ export default class Layout extends mixins(ResizeMixin) {
     left: 0;
     z-index: 1001;
     overflow: hidden;
+  }
+
+  .sidebar-right {
+    transition: width 0.28s;
+    width: $sideBarWidth !important;
+    height: 100vh;
+    position: fixed;
+    font-size: 0px;
+    top: $navHeight + 5px;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .hideOtherSide {
+    .app-main-wrapper {
+      height: 100vh;
+      margin-right: 0px
+    }
+    .sidebar-right{
+      width: 0px;
+    }
   }
 
   .hideSidebar {
