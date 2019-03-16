@@ -8,7 +8,7 @@
         <div class="app-main-wrapper" >
           <app-main/>
         </div>
-        <OtherSide class="sidebar-right" :collapse="classObj.hideOtherSide"/>
+        <OtherSide class="sidebar-right" />
       </div>
     </div>
   </div>
@@ -43,6 +43,7 @@ export default class Layout extends mixins(ResizeMixin) {
     return {
       hideOtherSide: !this.otherside.opened,
       openOtherSide: this.otherside.opened,
+      divOverOtherSide: true,
     }
   }
 
@@ -79,6 +80,7 @@ export default class Layout extends mixins(ResizeMixin) {
     transition: margin-left .28s;
     margin-left: $sideBarWidth;
     position: relative;
+    
   }
 
   .app-main-wrapper {
@@ -88,6 +90,7 @@ export default class Layout extends mixins(ResizeMixin) {
     transition: margin-right .28s;
     margin-right: $sideBarWidth;
     position: relative;
+    z-index: 1000;
   }
 
   .sidebar-container {
@@ -107,13 +110,17 @@ export default class Layout extends mixins(ResizeMixin) {
     transition: width 0.28s;
     width: $sideBarWidth !important;
     height: 100vh;
-    position: fixed;
+    position: absolute;
     font-size: 0px;
     top: $navHeight + 5px;
     bottom: 0;
     right: 0;
-    z-index: -1;
+    z-index: 999;
     overflow: hidden;
+  }
+
+  .divOverOtherSide {
+    z-index: 998
   }
 
   .hideOtherSide {
